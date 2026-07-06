@@ -6,7 +6,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.db.session import engine
 from app.core.config import settings
 from app.models.user import Base
-from app.models.user import UserORM
+
+from app.api.routers.user import router as user_router 
 
 
 @asynccontextmanager
@@ -19,6 +20,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+app.include_router(router=user_router)
+
 
 app.add_middleware(
     CORSMiddleware,

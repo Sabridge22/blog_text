@@ -18,6 +18,9 @@ class UserResponseSchema(BaseModel):
     bio: str | None = None
     created_at: datetime
 
+    class Config:
+        from_attributes = True
+
 class UserUpdateSchema(BaseModel):
     username: str | None = Field(None, min_length=3, max_length=50)
     bio: str | None = None
