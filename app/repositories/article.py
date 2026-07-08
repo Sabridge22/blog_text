@@ -19,3 +19,13 @@ class ArticleRepository:
         new_article = ArticleORM(title=title, content=content, author_id=author_id)
         self.db.add(new_article)
         return new_article
+    
+    def update(self, article: ArticleORM, title: str | None = None, content: str | None = None) -> ArticleORM:
+        if title is not None:
+            article.title = title
+        if content is not None:
+            article.content = content
+        
+        return article
+    
+
