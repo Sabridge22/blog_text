@@ -14,3 +14,8 @@ class ArticleRepository:
     def get_all(self, limit: int = 100, offset: int = 0) -> list[ArticleORM]:
         stmt = select(ArticleORM).limit(limit).offset(offset)
         return list(self.db.scalars(stmt).all())
+    
+    def create(self, title: str , content: str, author_id: str) -> ArticleORM:
+        new_article = ArticleORM(title=title, content=content, author_id=author_id)
+        self.db.add(new_article)
+        return new_article
