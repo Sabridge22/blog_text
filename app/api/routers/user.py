@@ -31,7 +31,7 @@ def update_user(user_id: Annotated[str, Path], update_data: Annotated[UserUpdate
     service = UserService(db)
     try:
         return service.update_user(user_id=user_id, update_data=update_data)
-    except UserNotFound as e:  # ← Добавить эту
+    except UserNotFound as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     except UserAlreadyExists as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
