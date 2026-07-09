@@ -28,3 +28,7 @@ class ArticleService:
         if article is None:
             raise ArticleNotFound("Article not found")
         return ArticleResponseSchema.model_validate(article)
+    
+    def get_all_articles(self, limit: int = 100, offset: int = 0) -> list[ArticleResponseSchema]:
+        articles = self.article_repository.get_all(limit=limit, offset=offset)
+        return [ArticleResponseSchema.model_validate(article) for article in articles]
