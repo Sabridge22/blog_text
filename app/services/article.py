@@ -22,3 +22,9 @@ class ArticleService:
         
         self.db.commit()
         return ArticleResponseSchema.model_validate(article_orm)
+
+    def get_article_by_id(self, article_id: str) -> ArticleResponseSchema:
+        article = self.article_repository.get_by_id(article_id=article_id)
+        if article is None:
+            raise ArticleNotFound("Article not found")
+        return ArticleResponseSchema.model_validate(article)
