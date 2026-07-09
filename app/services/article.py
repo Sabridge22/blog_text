@@ -47,3 +47,12 @@ class ArticleService:
 
         self.db.commit()
         return ArticleResponseSchema.model_validate(updated_article)
+    
+    def delete_article(self, article_id: str, current_user_id: str) -> None:
+        article = self.article_repository.get_by_id(article_id=article_id)
+        if article is None:
+            raise ArticleNotFound("Article not found")
+        if article.author_id != current_user_id:
+            raise PermissionDenied("You are not the author of this article")
+        self.article_repository.delete(article=article)
+        self.db.commit()
