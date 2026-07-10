@@ -8,7 +8,7 @@ from app.core.config import settings
 from app.models.user import Base
 
 from app.api.routers.user import router as user_router 
-
+from app.api.routers.article import router as article_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -21,6 +21,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(router=user_router)
+app.include_router(router=article_router)
 
 
 app.add_middleware(
