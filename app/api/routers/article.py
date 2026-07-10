@@ -15,4 +15,10 @@ def create_article(article_data: ArticleCreateSchema, db: Session = Depends(get_
     try:
         return service.create_article(article_data=article_data)
     except UserNotFound as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    
+@router.get('/', response_model=list[ArticleResponseSchema], status_code=status.HTTP_200_OK)
+def get_articles(limit: int = 100, offset: int = 0, db: Session = Depends(get_db)):
+    service = ArticleService(db)
+    return service.get_all_articles(limit=limit, offset=offset)
+    
