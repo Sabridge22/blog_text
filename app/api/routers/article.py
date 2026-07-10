@@ -21,4 +21,12 @@ def create_article(article_data: ArticleCreateSchema, db: Session = Depends(get_
 def get_articles(limit: int = 100, offset: int = 0, db: Session = Depends(get_db)):
     service = ArticleService(db)
     return service.get_all_articles(limit=limit, offset=offset)
+
+@router.get('/{article_id}', response_model=ArticleResponseSchema, status_code=status.HTTP_200_OK)
+def get_article_by_id(article_id: Annotated[str, Path], db: Session = Depends(get_db)):
+    service = ArticleService(db)
+    try:
+        return service.get_article_by_id(article_id=article_id)
+    except ArticleNotFound as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     
