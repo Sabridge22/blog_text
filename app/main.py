@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.db.session import engine
 from app.core.config import settings
-from app.models.user import Base
+from app.models.base import Base
 
 from app.api.routers.user import router as user_router 
 from app.api.routers.article import router as article_router

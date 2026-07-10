@@ -28,6 +28,6 @@ class ArticleRepository:
         
         return article
     
-    def delete(self, artice: ArticleORM) -> None:
-        self.db.delete(artice)    
+    def delete(self, article: ArticleORM) -> None:
+        self.db.delete(article)    
 

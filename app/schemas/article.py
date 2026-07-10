@@ -19,6 +19,8 @@ class ArticleResponseSchema(BaseModel):
     created_at: datetime
     updated_at: datetime
 
+    model_config = {"from_attributes": True}
+
 class ArticleWithAuthorSchema(ArticleResponseSchema):
     author: UserResponseSchema
     
