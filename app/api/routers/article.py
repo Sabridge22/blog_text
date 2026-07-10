@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Body, Depends, HTTPException, Path, status
 from sqlalchemy.orm import Session
-from app.schemas.article import ArticleCreateSchema, ArticleResponseSchema, ArticleUpdateSchema, ArticleWithAuthorSchema
+from app.schemas.article import ArticleCreateSchema, ArticleResponseSchema, ArticleUpdateSchema
 from app.services.article import ArticleNotFound, ArticleService, PermissionDenied
 from app.db.session import get_db
 from typing import Annotated
 
-from app.services.user import UserNotFound, UserAlreadyExists
+from app.services.user import UserNotFound
 
 router = APIRouter(prefix='/articles')
 
@@ -31,7 +31,7 @@ def get_article_by_id(article_id: Annotated[str, Path], db: Session = Depends(ge
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     
 @router.put('/{article_id}', response_model=ArticleResponseSchema, status_code=status.HTTP_200_OK)
-def update_article(article_id: Annotated[str, Path], update_data: ArticleUpdateSchema, current_user_id: str ,db: Session = Depends(get_db)):
+def update_article(article_id: Annotated[str, Path], update_data: ArticleUpdateSchema, current_user_id: str, db: Session = Depends(get_db)):
     service = ArticleService(db)
     try:
         return service.update_article(article_id=article_id, update_data=update_data, current_user_id=current_user_id)
@@ -39,3 +39,14 @@ def update_article(article_id: Annotated[str, Path], update_data: ArticleUpdateS
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
     except PermissionDenied as e:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(e))
+    
+@router.delete('/{article_id}', status_code=status.HTTP_204_NO_CONTENT)
+def delete_article(article_id: Annotated[str, Path], current_user_id: str, db: Session = Depends(get_db)) -> None:
+    service = ArticleService(db)
+    try:
+        service.delete_article(article_id=article_id, current_user_id=current_user_id)
+    except PermissionDenied as e:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(e))
+    except ArticleNotFound as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
+    
